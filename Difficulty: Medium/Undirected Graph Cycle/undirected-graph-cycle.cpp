@@ -4,8 +4,55 @@ using namespace std;
 
 
 // } Driver Code Ends
-class Solution {
+
+class Solution { 
   private:
+    bool isCycleBFS(vector<vector<int>>& adj,int u, vector<bool>& visited){
+        queue<pair<int,int>> q;
+        
+        q.push({u,-1});
+        visited[u]=true;
+        
+        while (!q.empty()){
+            pair<int,int> p=q.front();
+            q.pop();
+            
+            int source=p.first;
+            int parent=p.second;
+            
+            for (int &v:adj[source]){
+                if (!visited[v]){
+                    visited[v]=true;
+                    q.push({v,source}); // v ko source ne call kiya to wo uskaparent ho gya
+                }
+                else if(v!=parent){// if mein not visited check kiya to else mein aayega hi tabhiagar visited hoga, so overall ye condition hui visited and not parent 
+                    // means visited and not parent 
+                    return true;
+                }
+            }
+        }
+        return false; 
+    }
+  public:// dfs se to intuitive bhi lg rha tha, :) 
+    bool isCycle(vector<vector<int>>& adj) {
+        int v=adj.size();
+        vector<bool> visited(v,false);
+        
+        
+        
+        for (int i=0; i<v; i++){
+            if (!visited[i] && isCycleBFS(adj,i,visited)){
+                return true;
+            }
+        }
+        return false; 
+    }
+  
+};
+/*
+class Solution { 
+
+  private: // using dfs 
     bool isCycleDFS(vector<vector<int>>& adj, int u, vector<bool>& visited, int parent){
         visited[u]=true;
         
@@ -37,7 +84,9 @@ class Solution {
         return false; // kahin cycle n mili 
         
     }
+
 };
+*/
 // dfs se visit krte jao and visited ko unordered_map mien dalte jaao 
 // jisko bhi visit kro usko check krte jao pahle se hi to nhi present hai ump mein 
 // agar pahle se present hai and wo parent nhi h (undirected h na) means cycle hai nhi to nhi hai :) 
